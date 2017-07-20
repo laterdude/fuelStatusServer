@@ -2,6 +2,7 @@ const fs = require('fs')
 const regularArray = require('../queries/regular')
 const manualArray = require('../queries/manual')
 const uncuredArray = require('../queries/uncured')
+const oldErcDataArchive = require('../archive/ercDataArchive.json')
 
 const d = new Date()
 const name = `${d.getFullYear()}${d.getMonth() + 1}${d.getDate()}${d.getHours() + 1}`
@@ -40,15 +41,27 @@ async function genErcData() {
 			}
 			return prev
 		}, {})
+
+		if (data.length === 0) return oldErcDataArchive.json
+		else {
+			fs.writeFile(`./archive/ercDataArchive.json`, JSON.stringify(data), err => {
+				if (err) {
+					return console.log(err)
+				}
+				console.log("file saved")
+			})
+			return data
+		}
+				
 		// file.writeFile(JSON.stringify(data))
 		// console.log(JSON.stringify(data))
-		fs.writeFile(`./archive/ercDataArchive.json`, JSON.stringify(data), err => {
-			if (err) {
-				return console.log(err)
-			}
-			console.log("file saved")
-		})
-		return data
+		// fs.writeFile(`./archive/ercDataArchive.json`, JSON.stringify(data), err => {
+		// 	if (err) {
+		// 		return console.log(err)
+		// 	}
+		// 	console.log("file saved")
+		// })
+		// return data
 	}
 	catch (err) {
 		console.log(err)
